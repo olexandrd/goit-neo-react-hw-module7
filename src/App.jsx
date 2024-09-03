@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import ContactList from "./components/ContactList/ContactList";
+import { lazy, Suspense, useEffect } from "react";
 import SearchBox from "./components/SearchBox/SearchBox";
 import ContactForm from "./components/ContactForm/ContactForm";
 import css from "./App.module.css";
@@ -11,7 +10,8 @@ import {
 } from "./redux/selectors";
 import { fetchContacts } from "./redux/contactsOps";
 import Loader from "./components/Loader/Loader";
-import LoadError from "./components/LoadError/LoadError";
+const LoadError = lazy(() => import("./components/LoadError/LoadError"));
+const ContactList = lazy(() => import("./components/ContactList/ContactList"));
 
 const App = () => {
   const dispatch = useDispatch();
@@ -28,13 +28,15 @@ const App = () => {
       <h1 className={css.header}>Phonebook</h1>
       <ContactForm />
       <SearchBox />
-      {filteredContacts.length > 0 ? (
-        <ContactList />
-      ) : (
-        !(loading || !!error) && <p>No contacts found</p>
-      )}
+      <Suspense fallback={<Loader />}>
+        {filteredContacts.length > 0 ? (
+          <ContactList />
+        ) : (
+          !(loading || !!error) && <p>No contacts found</p>
+        )}
+        {error && <LoadError />}
+      </Suspense>
       {loading && <Loader />}
-      {error && <LoadError />}
     </div>
   );
 };
