@@ -9,6 +9,7 @@ const LoadError = () => {
     <div className={css.loadError}>
       <h2>Oops...</h2>
       <p>{error}</p>
+      <img src="/error.gif" alt="error" loading="lazy" className={css.image} />
     </div>
   );
 };

@@ -4,6 +4,7 @@ import SearchBox from "./components/SearchBox/SearchBox";
 import ContactForm from "./components/ContactForm/ContactForm";
 import css from "./App.module.css";
 import {
+  selectContacts,
   selectError,
   selectFilteredContacts,
   selectIsLoading,
@@ -12,12 +13,19 @@ import { fetchContacts } from "./redux/contactsOps";
 import Loader from "./components/Loader/Loader";
 const LoadError = lazy(() => import("./components/LoadError/LoadError"));
 const ContactList = lazy(() => import("./components/ContactList/ContactList"));
+const AddContactNotice = lazy(() =>
+  import("./components/AddContactNotice/AddContactNotice")
+);
+const NoContactsNotice = lazy(() =>
+  import("./components/NoContactsNotice/NoContactsNotice")
+);
 
 const App = () => {
   const dispatch = useDispatch();
   const loading = useSelector(selectIsLoading);
   const error = useSelector(selectError);
   const filteredContacts = useSelector(selectFilteredContacts);
+  const allContacts = useSelector(selectContacts);
 
   useEffect(() => {
     dispatch(fetchContacts());
@@ -32,7 +40,10 @@ const App = () => {
         {filteredContacts.length > 0 ? (
           <ContactList />
         ) : (
-          !(loading || !!error) && <p>No contacts found</p>
+          !(loading || !!error) && !!allContacts.length && <NoContactsNotice />
+        )}
+        {allContacts.length === 0 && !(loading || !!error) && (
+          <AddContactNotice />
         )}
         {error && <LoadError />}
       </Suspense>
