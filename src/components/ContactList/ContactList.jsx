@@ -3,20 +3,19 @@ import css from "./ContactList.module.css";
 import Contact from "../Contact/Contact";
 import { useEffect } from "react";
 import { fetchContacts } from "../../redux/contactsOps";
-import { getError, getIsLoading } from "../../redux/selectors";
+import {
+  selectError,
+  selectFilteredContacts,
+  selectIsLoading,
+} from "../../redux/selectors";
 import Loader from "../Loader/Loader";
 import LoadError from "../LoadError/LoadError";
 
 const ContactList = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector((state) => state.contacts.items);
-  const loading = useSelector(getIsLoading);
-  const error = useSelector(getError);
-  const searchRequest = useSelector((state) => state.filters.name);
-
-  const filteredContacts = contacts.filter((contact) =>
-    contact.name.toLowerCase().includes(searchRequest.toLowerCase())
-  );
+  const loading = useSelector(selectIsLoading);
+  const error = useSelector(selectError);
+  const filteredContacts = useSelector(selectFilteredContacts);
 
   useEffect(() => {
     dispatch(fetchContacts());

@@ -1,0 +1,10 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  max-width: 1200px;
+  padding: 0 30px;
+}
+
+.header {
+  margin: 0 auto;
+}
