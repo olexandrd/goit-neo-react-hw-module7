@@ -1,10 +1,12 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FaUser, FaPhone } from "react-icons/fa6";
 import css from "./Contact.module.css";
 import { deleteContact } from "../../redux/contactsOps";
+import { selectIsLoading } from "../../redux/selectors";
 
 const Contact = ({ name, number, id }) => {
   const dispatch = useDispatch();
+  const loading = useSelector(selectIsLoading);
 
   const handleDelete = (id) => {
     dispatch(deleteContact(id));
@@ -23,6 +25,7 @@ const Contact = ({ name, number, id }) => {
         </p>
       </div>
       <button
+        disabled={loading}
         onClick={() => {
           handleDelete(id);
         }}
